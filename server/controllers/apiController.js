@@ -1,10 +1,10 @@
+
 const apiController = {
   getSummonerInfo: async (req,res,next) => {
-    const apiLink = process.env.SUMMONERINFOURL + req.body.summonerName + '?api_key=' + process.env.APIKEY
+    const apiLink = `https://${req.body.region}1${process.env.IDURL}${req.body.summonerName}?api_key=${process.env.APIKEY}`
     try {
       const response = await fetch(apiLink)
       const userInfoJSON = await response.json()
-      console.log(userInfoJSON)
       res.locals.userInfo = userInfoJSON;
       return next()
     } catch (err) {
