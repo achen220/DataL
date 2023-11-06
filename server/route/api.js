@@ -4,7 +4,7 @@ import apiController from '../controllers/apiController.js';
 const apiRouter = express.Router();
 
 apiRouter.post('/getUser', apiController.getSummonerInfo, (req, res) => {
-  res.status(200).json('success');
+  return res.status(200).json('userHasBeenFound');
 })
 
 export default apiRouter;
