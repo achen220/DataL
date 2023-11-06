@@ -1,10 +1,12 @@
-import './App.css'
 
+import HeaderBar from './components/HeaderBar.tsx'
+import HistoryContainer from './components/historyContainer.tsx'
 function App() {
   return (
-    <div className='bg-black'>
-      <p className='text-red-400'>dwdad</p>
-    </div>
+    <>
+      <HeaderBar />
+      <HistoryContainer />
+    </>
   )
 }
 
