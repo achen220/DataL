@@ -3,7 +3,7 @@ import apiController from '../controllers/apiController.js';
 
 const apiRouter = express.Router();
 
-apiRouter.get('/getUser', apiController.searchUser, (req, res) => {
+apiRouter.post('/getUser', apiController.getSummonerInfo, (req, res) => {
   res.status(200).json('success');
 })
 

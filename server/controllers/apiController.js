@@ -1,5 +1,5 @@
 const apiController = {
-  searchUser: (req,res,next) => {
+  getSummonerInfo: (req,res,next) => {
     try {
       return next()
     } catch (err) {
