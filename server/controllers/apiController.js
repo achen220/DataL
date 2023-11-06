@@ -1,6 +1,10 @@
 const apiController = {
-  sayHi: () => {
-    console.log('hello');
+  searchUser: (req,res,next) => {
+    try {
+      return next()
+    } catch (err) {
+      return next('cannot find user:', err.message)
+    }
   }
 }
 
