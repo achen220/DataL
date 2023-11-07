@@ -7,7 +7,7 @@ interface FindUser {
 
 function HeaderBar (props: any) {
   const [summonerName, setSummonerName] = useState<string>('');
-  const [region, setRegion] =useState<string>('NA');
+  const [region, setRegion] = useState<string>('NA');
 
   const searchSummoner = async () => {
     const message: FindUser = {
@@ -31,6 +31,7 @@ function HeaderBar (props: any) {
     }
     setSummonerName('')
   }
+
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">

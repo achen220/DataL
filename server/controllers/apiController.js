@@ -1,5 +1,3 @@
-import { filter } from "rxjs"
-
 const regionToContinent = {
   'AMERICAS': [ 'NA', 'BR', 'LAS', 'LAN'],
   'ASIA': [ 'KR', 'JP'],
@@ -56,19 +54,31 @@ const apiController = {
       const apiLink = `https://${res.locals.continent}${process.env.MATCHINFOURL}${res.locals.matchCodes[i]}?api_key=${process.env.APIKEY}`;
       apiLinkArray.push(apiLink);
     }
+    console.log("matchHistory Link Array:", apiLinkArray)
     try {
       const matchHistoryInfo = [];
       for (let i = 0; i < apiLinkArray.length; i++) {
         const response = await fetch(apiLinkArray[i]);
         const matchInfo = await response.json();
         const filteredMatchInfo = {};
+        const participantsArray= matchInfo.info.participants;
+
         filteredMatchInfo.queueId = matchInfo.info.queueId;
-        filteredMatchInfo.participants = matchInfo.metadata.participants;
+
+        filteredMatchInfo.participants = {
+          blue: [],
+          red: []
+        }
+        participantsArray.forEach((player) => {
+          if (player.teamId === 100) filteredMatchInfo.participants.blue.push(player.summonerName)
+          else if (player.teamId === 200) filteredMatchInfo.participants.red.push(player.summonerName)
+        })
+
         filteredMatchInfo.gameDuration = matchInfo.info.gameDuration;
+        
         filteredMatchInfo.gameEndTime = matchInfo.info.gameEndTimestamp;
         const findMatchStatus = () => {
           let matchStatus;
-          const participantsArray= matchInfo.info.participants;
           participantsArray.forEach((player) => {
             if (res.locals.userInfo.puuid === player.puuid)  {
               matchStatus = player.win;

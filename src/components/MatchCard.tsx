@@ -4,12 +4,17 @@ import { useState, useEffect } from "react";
 type QueueTypeMap = {
   [key: number]: string;
 };
-
+type participants = {
+  blue: string[],
+  red: string[],
+}
 function MatchCard (props:any) {
   const [queueType, setQueueType] = useState<string>();
   const [timeDiff, setTimeDiff] = useState<number>();
   const [timeDuration, setTimeDuration] = useState<string>();
   const [matchStatus, setMatchStatus] = useState<string>();
+  const [participants, setParticipants] = useState<participants>();
+
   //convert queueID to respective queue type
   const idToQueueType: QueueTypeMap = {
     400: "Summoner's Rift Normal (Draft Pick)",
@@ -18,7 +23,10 @@ function MatchCard (props:any) {
     440: "Ranked Flex Queue",
     450: "ARAM"
   }
+  //redirect to different player page
+  const redirectPlayer = () => {
 
+  }
   //convert riotAPI time stamp to current time
   function calculateTimeDifference(riotTimestamp) {
     // Convert the Riot timestamp to seconds
@@ -53,20 +61,20 @@ function MatchCard (props:any) {
     const seconds = Math.floor(riotTimesDuration % 60);
     // Format as a string in "minutes:seconds" format
     return `${minutes}min ${seconds < 10 ? '0' : ''}${seconds}sec`;
-  }
-  
-  
+  } 
 
   useEffect(() => {
     setQueueType(idToQueueType[props.match.queueId]);
-    setTimeDiff(calculateTimeDifference(props.match.gameEndTime))
-    setTimeDuration(convertRiotTimesDuration(props.match.gameDuration))
+    setTimeDiff(calculateTimeDifference(props.match.gameEndTime));
+    setTimeDuration(convertRiotTimesDuration(props.match.gameDuration));
+    setParticipants(props.match.participants)
     setMatchStatus(() => {
       return props.match.matchStatus === true ? 'VICTORY' : 'DEFEAT';
-    })
+    });
   },[props.match])
+
   return (
-    <div className="card card-bordered w-96 bg-base-100 shadow-xl">
+    <div className="card card-bordered w-96 bg-base-100 shadow-xl w-full">
       <div className="card-body flex-row">
         <div id="matchCard-start">
           <div>
@@ -83,8 +91,25 @@ function MatchCard (props:any) {
         <div id="matchCard-center">
 
         </div>
-        <div className="grid grid-cols-2" id="matchCard-end">
-   
+        <div className="grid grid-cols-2 gap-x-3 text-sm" id="matchCard-end">
+          <ul id="blue">
+            {participants?.blue.map((player, index) => (
+              <li key={index} className="whitespace-nowrap">
+                <button>
+                  {player}
+                </button>
+              </li>
+            ) )}
+          </ul>
+          <ul id="red" >
+            {participants?.red.map((player, index) => (
+              <li key={index} className="whitespace-nowrap">
+                <button>
+                  {player}
+                </button>
+              </li>
+              ) )}
+          </ul>
         </div>
       </div>
     </div>
