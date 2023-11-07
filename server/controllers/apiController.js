@@ -1,3 +1,5 @@
+import { filter } from "rxjs"
+
 const regionToContinent = {
   'AMERICAS': [ 'NA', 'BR', 'LAS', 'LAN'],
   'ASIA': [ 'KR', 'JP'],
@@ -49,7 +51,12 @@ const apiController = {
       for (let i = 0; i < apiLinkArray.length; i++) {
         const response = await fetch(apiLinkArray[i]);
         const matchInfo = await response.json();
-        matchHistoryInfo.push(matchInfo);
+        const filteredMatchInfo = {};
+        filteredMatchInfo.queueId = matchInfo.info.queueId;
+        filteredMatchInfo.participants = matchInfo.metadata.participants;
+        filteredMatchInfo.gameDuration = matchInfo.info.gameDuration;
+        filteredMatchInfo.gameEndTime = matchInfo.info.gameEndTimestamp;
+        matchHistoryInfo.push(filteredMatchInfo);
       }
       res.locals.matchHistoryInfo = matchHistoryInfo;
       return next();

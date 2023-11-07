@@ -1,12 +1,15 @@
 
 import MatchCard from "./MatchCard";
 
-function HistoryContainer () {
+function HistoryContainer (props:any) {
   return(
-    <section className="w-1/2 ">
+    <section className="w-full">
       <h1 className="text-xl underline"> Match History </h1>
       <div className="w-full ">
-        <MatchCard />
+        {(props.matchStats).map((match,index) => {
+          return <MatchCard index={index} match={match}/>
+        })
+        }
       </div>
     </section>
   )

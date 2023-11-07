@@ -5,7 +5,7 @@ interface FindUser {
   region: string
 }
 
-function HeaderBar () {
+function HeaderBar (props: any) {
   const [summonerName, setSummonerName] = useState<string>('');
   const [region, setRegion] =useState<string>('NA');
 
@@ -23,7 +23,9 @@ function HeaderBar () {
 
     const jsonResponse = await response.json();
     if (jsonResponse) {
+      //storing data in top level component to pass to adjacent  
       console.log(jsonResponse)
+      props.setMatchStats(() => jsonResponse)
     } else {
       console.log('summoner not found')
     }
