@@ -14,6 +14,16 @@ const apiController = {
       const response = await fetch(apiLink)
       const userInfo = await response.json()
       res.locals.userInfo = userInfo;
+      //userInfoStructure
+      // {
+      //   "id": "Hxcc3DoLDfQ_1zeZMG7RIJvHWQsfIl8hOlNwkrfu8eH2Unk",
+      //   "accountId": "tUg-kppR1wNewekBsrnUPolfB09VevFn4XS63-Lw-HLhng",
+      //   "puuid": "mSV0NSAhUt0qKXEN1Kd7mPOqIEfelhQxmpsh5ZzKe8unBTl74l5YWaeSZFV-rgJlh2-NTvL4sfbsWQ",
+      //   "name": "amcrsu",
+      //   "profileIconId": 6337,
+      //   "revisionDate": 1699185557000,
+      //   "summonerLevel": 446
+      // }
       return next();
     } catch (err) {
       return next('cannot find user:', err.message)
@@ -56,6 +66,25 @@ const apiController = {
         filteredMatchInfo.participants = matchInfo.metadata.participants;
         filteredMatchInfo.gameDuration = matchInfo.info.gameDuration;
         filteredMatchInfo.gameEndTime = matchInfo.info.gameEndTimestamp;
+        const findMatchStatus = () => {
+          let matchStatus;
+          const participantsArray= matchInfo.info.participants;
+          participantsArray.forEach((player) => {
+            if (res.locals.userInfo.puuid === player.puuid)  {
+              matchStatus = player.win;
+              return;
+            }
+          })
+          // Ensure that matchStatus is defined before returning
+          if (matchStatus !== undefined) {
+            return matchStatus;
+          } else {
+          // Handle the case where no match status was found
+            throw new Error("Match status not found");
+          }
+        }
+        filteredMatchInfo.matchStatus = findMatchStatus()
+        findMatchStatus();
         matchHistoryInfo.push(filteredMatchInfo);
       }
       res.locals.matchHistoryInfo = matchHistoryInfo;

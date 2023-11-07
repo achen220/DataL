@@ -6,8 +6,10 @@ type QueueTypeMap = {
 };
 
 function MatchCard (props:any) {
-  const [queueType, setQueueType] = useState<string>('');
-  const [timeDiff, setTimeDiff] = useState<num>(0);
+  const [queueType, setQueueType] = useState<string>();
+  const [timeDiff, setTimeDiff] = useState<number>();
+  const [timeDuration, setTimeDuration] = useState<string>();
+  const [matchStatus, setMatchStatus] = useState<string>();
   //convert queueID to respective queue type
   const idToQueueType: QueueTypeMap = {
     400: "Summoner's Rift Normal (Draft Pick)",
@@ -21,16 +23,12 @@ function MatchCard (props:any) {
   function calculateTimeDifference(riotTimestamp) {
     // Convert the Riot timestamp to seconds
     const timestampInSeconds = riotTimestamp / 1000;
-  
     // Create a Date object for the game timestamp
     const gameDate = new Date(timestampInSeconds * 1000);
-  
     // Get the current date
     const currentDate = new Date();
-  
     // Calculate the time difference in milliseconds
     const timeDifference = currentDate - gameDate;
-  
     if (timeDifference < 1000 * 60) {
       // Less than a minute ago
       return 'Just now';
@@ -48,24 +46,45 @@ function MatchCard (props:any) {
       return `${daysAgo} day${daysAgo === 1 ? '' : 's'} ago`;
     }
   }
+  //convert riotAPI game duration to minutes and seconds
+  function convertRiotTimesDuration(riotTimesDuration) {
+    // Calculate minutes and seconds
+    const minutes = Math.floor(riotTimesDuration / 60);
+    const seconds = Math.floor(riotTimesDuration % 60);
+    // Format as a string in "minutes:seconds" format
+    return `${minutes}min ${seconds < 10 ? '0' : ''}${seconds}sec`;
+  }
+  
   
 
   useEffect(() => {
     setQueueType(idToQueueType[props.match.queueId]);
     setTimeDiff(calculateTimeDifference(props.match.gameEndTime))
+    setTimeDuration(convertRiotTimesDuration(props.match.gameDuration))
+    setMatchStatus(() => {
+      return props.match.matchStatus === true ? 'VICTORY' : 'DEFEAT';
+    })
   },[props.match])
   return (
     <div className="card card-bordered w-96 bg-base-100 shadow-xl">
       <div className="card-body flex-row">
         <div id="matchCard-start">
-          <h1>{queueType}</h1>
-          <h3>{timeDiff}</h3>
+          <div>
+            <h1>{queueType}</h1>
+            <span>{timeDiff}</span>
+          </div> 
+          <hr className="w-1/2 mx-auto my-2 "/>
+          <div className="">
+            <h1 className="font-bold">{matchStatus}</h1>
+            <span>{timeDuration}</span>
+          </div>
+
         </div>
         <div id="matchCard-center">
-          ds
+
         </div>
         <div className="grid grid-cols-2" id="matchCard-end">
-          dsa
+   
         </div>
       </div>
     </div>
