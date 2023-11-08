@@ -15,12 +15,12 @@ export const currentPlayerSlice = createSlice({
     changeName: (state, action) => {
       state.summonerName = action.payload;
     },
-    changeRegion: (state, action:PayloadAction) => {
-      state.region = action.payload
+    changeRegion: (state, action:PayloadAction<string>) => {
+      state.region = action.payload;
     }
   }
 })
 
-export const {changeName} = currentPlayerSlice.actions;
+export const {changeName,changeRegion} = currentPlayerSlice.actions;
 
 export default currentPlayerSlice.reducer;

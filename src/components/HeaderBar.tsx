@@ -1,5 +1,6 @@
 import { ChangeEvent, useState} from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { changeName, changeRegion } from "../redux/currentPlayer"; 
 interface FindUser {
   summonerName: string,
   region: string
@@ -9,7 +10,13 @@ function HeaderBar (props: any) {
   const [summonerName, setSummonerName] = useState<string>('');
   const [region, setRegion] = useState<string>('NA');
 
+  // const { summonerName } = useSelector((state) => state.currentPlayer)
+  // const { region } = useSelector((state) => state.currentPlayer)
+  const dispatch = useDispatch()
+
   const searchSummoner = async () => {
+    dispatch(changeName(summonerName))
+    dispatch(changeRegion(region))
     const message: FindUser = {
       summonerName: summonerName,
       region: region
@@ -22,14 +29,15 @@ function HeaderBar (props: any) {
     })
 
     const jsonResponse = await response.json();
-    if (jsonResponse) {
+    if (response.ok) {
       //storing data in top level component to pass to adjacent  
       console.log(jsonResponse)
       props.setMatchStats(() => jsonResponse)
     } else {
       console.log('summoner not found')
+      props.setMatchStats([])
     }
-    setSummonerName('')
+    setSummonerName('');
   }
 
   return (
