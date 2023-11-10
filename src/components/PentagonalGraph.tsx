@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import * as d3 from "d3";
 
 
+
 interface statsRanking {
   totalDamageDealt: number[],
   death: number[],
@@ -104,7 +105,20 @@ function PentagonalGraph (props) {
         playerRank[currentStat].push(damageRank);
       } 
     }
-    console.log("ranking:", playerRank)
+    //calculate average score in each stats
+    const playerRankAverage = {
+      totalDamageDealt: null,
+      death: null,
+      killParticipation: null,
+      totalMinionsKilled: null,
+      visionScore: null
+    }
+    for (const stat in playerRank) {
+      const total = playerRank[stat].reduce((acc:number,curr:number) => acc+=curr,0);
+      playerRankAverage[stat] = total/20;
+    }
+    console.log(playerRankAverage)
+    
   },[props.matchStats])
   return (
     <>
