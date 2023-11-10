@@ -69,18 +69,19 @@ const apiController = {
         }
         participantsArray.forEach((player) => {
           let userName = player.summonerName;
+          let playerStats = {};
+          playerStats.name = userName;
+          playerStats.totalDamageDealt = player.totalDamageDealt;
+          playerStats.killParticipation = player.KillParticipation;
+          playerStats.totalMinionsKilledt = player.totalMinionsKilled;
+          playerStats.visionScore = player.visionScore;
           //determine which team each player is in
-          if (player.teamId === 100) filteredMatchInfo.participants.blue.push(player.userName)
-          else if (player.teamId === 200) filteredMatchInfo.participants.red.push(player.userName)
-          
-          //pentagon chart data
-          //initiate object
-          filteredMatchInfo[userName] = {}
-          filteredMatchInfo[userName].totalDamageDealt = player.totalDamageDealt;
-          filteredMatchInfo[userName].deaths = player.deaths;
-          filteredMatchInfo[userName].KillParticipation = player.challenges.KillParticipation;
-          filteredMatchInfo[userName].totalMinionsKilled = player.totalMinionsKilled;
-          filteredMatchInfo[userName].visionScore = player.visionScore;
+          if (player.teamId === 100) {
+            filteredMatchInfo.participants.blue.push(playerStats)
+          }
+          else if (player.teamId === 200) {
+            filteredMatchInfo.participants.red.push(playerStats)
+          }
         })
 
         filteredMatchInfo.gameDuration = matchInfo.info.gameDuration;

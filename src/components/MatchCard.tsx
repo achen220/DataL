@@ -67,7 +67,7 @@ function MatchCard (props:any) {
     setQueueType(idToQueueType[props.match.queueId]);
     setTimeDiff(calculateTimeDifference(props.match.gameEndTime));
     setTimeDuration(convertRiotTimesDuration(props.match.gameDuration));
-    setParticipants(props.match.participants)
+    setParticipants(() => props.match.participants)
     setMatchStatus(() => {
       return props.match.matchStatus === true ? 'VICTORY' : 'DEFEAT';
     });
@@ -96,7 +96,7 @@ function MatchCard (props:any) {
             {participants?.blue.map((player, index) => (
               <li key={index} className="whitespace-nowrap">
                 <button>
-                  {player}
+                  {player.name}
                 </button>
               </li>
             ) )}
@@ -105,7 +105,7 @@ function MatchCard (props:any) {
             {participants?.red.map((player, index) => (
               <li key={index} className="whitespace-nowrap">
                 <button>
-                  {player}
+                  {player.name}
                 </button>
               </li>
               ) )}

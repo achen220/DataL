@@ -4,7 +4,7 @@ import * as d3 from "d3";
 function PentagonalGraph (props) {
   const chartRef = useRef();
   const data = props.matchStats;
-  console.log('totalDamage:', data[0])
+
   useEffect(() => {
     // Clear the previous SVG if it exists
     d3.select(chartRef.current).selectAll('svg').remove();
