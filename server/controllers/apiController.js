@@ -62,16 +62,25 @@ const apiController = {
         const matchInfo = await response.json();
         const filteredMatchInfo = {};
         const participantsArray= matchInfo.info.participants;
-
         filteredMatchInfo.queueId = matchInfo.info.queueId;
-
         filteredMatchInfo.participants = {
           blue: [],
           red: []
         }
         participantsArray.forEach((player) => {
-          if (player.teamId === 100) filteredMatchInfo.participants.blue.push(player.summonerName)
-          else if (player.teamId === 200) filteredMatchInfo.participants.red.push(player.summonerName)
+          let userName = player.summonerName;
+          //determine which team each player is in
+          if (player.teamId === 100) filteredMatchInfo.participants.blue.push(player.userName)
+          else if (player.teamId === 200) filteredMatchInfo.participants.red.push(player.userName)
+          
+          //pentagon chart data
+          //initiate object
+          filteredMatchInfo[userName] = {}
+          filteredMatchInfo[userName].totalDamageDealt = player.totalDamageDealt;
+          filteredMatchInfo[userName].deaths = player.deaths;
+          filteredMatchInfo[userName].KillParticipation = player.challenges.KillParticipation;
+          filteredMatchInfo[userName].totalMinionsKilled = player.totalMinionsKilled;
+          filteredMatchInfo[userName].visionScore = player.visionScore;
         })
 
         filteredMatchInfo.gameDuration = matchInfo.info.gameDuration;
@@ -93,14 +102,7 @@ const apiController = {
             throw new Error("Match status not found");
           }
         }
-        filteredMatchInfo.matchStatus = findMatchStatus()
-        findMatchStatus();
-        //for pentagonal chart
-        filteredMatchInfo.totalDamageDealt = matchInfo.info.totalDamageDealt;
-        filteredMatchInfo.Deaths = matchInfo.info.Deaths;
-        filteredMatchInfo.KillParticipation = matchInfo.info.KillParticipation;
-        filteredMatchInfo.totalMinionsKilled = matchInfo.info.totalMinionsKilled;
-        filteredMatchInfo.visionScore = matchInfo.visionScore;
+        filteredMatchInfo.matchStatus = findMatchStatus();
         matchHistoryInfo.push(filteredMatchInfo);
       }
       res.locals.matchHistoryInfo = matchHistoryInfo;
