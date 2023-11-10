@@ -54,7 +54,7 @@ const apiController = {
       const apiLink = `https://${res.locals.continent}${process.env.MATCHINFOURL}${res.locals.matchCodes[i]}?api_key=${process.env.APIKEY}`;
       apiLinkArray.push(apiLink);
     }
-    console.log("matchHistory Link Array:", apiLinkArray)
+    // console.log("matchHistory Link Array:", apiLinkArray)
     try {
       const matchHistoryInfo = [];
       for (let i = 0; i < apiLinkArray.length; i++) {
@@ -95,6 +95,12 @@ const apiController = {
         }
         filteredMatchInfo.matchStatus = findMatchStatus()
         findMatchStatus();
+        //for pentagonal chart
+        filteredMatchInfo.totalDamageDealt = matchInfo.info.totalDamageDealt;
+        filteredMatchInfo.Deaths = matchInfo.info.Deaths;
+        filteredMatchInfo.KillParticipation = matchInfo.info.KillParticipation;
+        filteredMatchInfo.totalMinionsKilled = matchInfo.info.totalMinionsKilled;
+        filteredMatchInfo.visionScore = matchInfo.visionScore;
         matchHistoryInfo.push(filteredMatchInfo);
       }
       res.locals.matchHistoryInfo = matchHistoryInfo;

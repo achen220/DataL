@@ -1,15 +1,9 @@
+import PentagonalGraph from "./PentagonalGraph"
 
-function StatsContainer () {
+function StatsContainer (props) {
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
-      <h2 className="card-title">Player Name</h2>
-      <div className="card-body">
-
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div className="card-actions justify-end">
-          <button className="btn btn-primary">Buy Now</button>
-        </div>
-      </div>
+    <div className="card w-screen h-screen bg-base-100 shadow-xl">
+      <PentagonalGraph matchStats={props.matchStats}/>
     </div>
   )
 }
