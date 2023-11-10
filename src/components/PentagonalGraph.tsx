@@ -1,11 +1,21 @@
 import { useEffect, useRef } from "react"
+import { useSelector } from "react-redux";
 import * as d3 from "d3";
+
+
+interface statsRanking {
+  totalDamageDealt: number[],
+  death: number[],
+  killParticipation: number[],
+  totalMinionsKilled: number[],
+  visionScore: number[]
+}
 
 function PentagonalGraph (props) {
   const chartRef = useRef();
   const data = props.matchStats;
-
-  useEffect(() => {
+  const { summonerName } = useSelector((state) => state.currentPlayer)
+    useEffect(() => {
     // Clear the previous SVG if it exists
     d3.select(chartRef.current).selectAll('svg').remove();
     //create svg containing graph
@@ -15,6 +25,7 @@ function PentagonalGraph (props) {
     .attr('width', svgLength)
     .attr('height', svgLength)
     .attr('margin-top', 100)
+    //creation of All layers of pentagon
     for (let i = 0; i <= 5; i++) {
       //defining dimensions of graph
       const polygonlength: number = 600 - 100*i;
@@ -24,7 +35,7 @@ function PentagonalGraph (props) {
       const halfFaceSize: number = polygonlength * Math.tan(36 * (Math.PI / 180)/2);
       const dropHeight: number = Math.sqrt(Math.pow((2*halfFaceSize),2) - Math.pow(polygonlength/2,2))
       // Calculate the coordinates for the five points of the pentagon
-      const coordinates:num[][] = [
+      const coordinates:number[][] = [
         [polygonlength/2+margin, margin],
         [margin,dropHeight + margin],
         [(polygonlength/2) - halfFaceSize + margin, polygonlength
@@ -65,11 +76,43 @@ function PentagonalGraph (props) {
         .attr('dy', -10); // Adjust the vertical position of the labels as needed
     }
 
+    const playerRank: statsRanking = {
+      totalDamageDealt: [],
+      death: [],
+      killParticipation: [],
+      totalMinionsKilled: [],
+      visionScore: []
+    }
+    //rank player stats in all five category out of 10
+    for (let i = 0; i < data.length; i++) {
+      const currentMatch = data[i];
 
+      const combinedTeam = currentMatch.participants.blue.concat(currentMatch.participants.red);
+
+      const stats: string[] = ['totalDamageDealt', 'death','killParticipation','totalMinionsKilled','visionScore'];
+      
+      for (let j = 0; j < stats.length; j++) {
+        const currentStat:string = stats[j];
+        let sortedPlayerStats;
+
+        if (currentStat !== 'death') sortedPlayerStats = combinedTeam.toSorted((a,b) => a[currentStat]- b[currentStat]);
+        else sortedPlayerStats = combinedTeam.toSorted((a,b) => b[currentStat]- a[currentStat]);
+
+        // console.log(`sorted ${currentStat}:`, sortedPlayerStats)
+        const damageRank = sortedPlayerStats.findIndex((player) => player.name.toUpperCase() === summonerName.toUpperCase()) + 1
+        
+        playerRank[currentStat].push(damageRank);
+      } 
+    }
+    console.log("ranking:", playerRank)
   },[props.matchStats])
   return (
-    <div ref={chartRef} className="m-auto">
-    </div>
+    <>
+      <h1>{summonerName}</h1>
+      <div ref={chartRef} className="m-auto">
+      </div>
+    </>
+
   )
 }
 

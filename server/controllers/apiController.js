@@ -12,16 +12,6 @@ const apiController = {
       const response = await fetch(apiLink)
       const userInfo = await response.json()
       res.locals.userInfo = userInfo;
-      //userInfoStructure
-      // {
-      //   "id": "Hxcc3DoLDfQ_1zeZMG7RIJvHWQsfIl8hOlNwkrfu8eH2Unk",
-      //   "accountId": "tUg-kppR1wNewekBsrnUPolfB09VevFn4XS63-Lw-HLhng",
-      //   "puuid": "mSV0NSAhUt0qKXEN1Kd7mPOqIEfelhQxmpsh5ZzKe8unBTl74l5YWaeSZFV-rgJlh2-NTvL4sfbsWQ",
-      //   "name": "amcrsu",
-      //   "profileIconId": 6337,
-      //   "revisionDate": 1699185557000,
-      //   "summonerLevel": 446
-      // }
       return next();
     } catch (err) {
       return next('cannot find user:', err.message)
@@ -72,8 +62,9 @@ const apiController = {
           let playerStats = {};
           playerStats.name = userName;
           playerStats.totalDamageDealt = player.totalDamageDealt;
-          playerStats.killParticipation = player.KillParticipation;
-          playerStats.totalMinionsKilledt = player.totalMinionsKilled;
+          playerStats.death = player.death;
+          playerStats.killParticipation = player.challenges.killParticipation;
+          playerStats.totalMinionsKilled = player.totalMinionsKilled;
           playerStats.visionScore = player.visionScore;
           //determine which team each player is in
           if (player.teamId === 100) {
