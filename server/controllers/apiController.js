@@ -50,13 +50,15 @@ const apiController = {
         const response = await fetch(apiLinkArray[i]);
         const matchInfo = await response.json();
         const filteredMatchInfo = {};
+        if (matchInfo.info.gameMode !== 'CLASSIC') continue;
         const participantsArray= matchInfo.info.participants;
         filteredMatchInfo.queueId = matchInfo.info.queueId;
         filteredMatchInfo.participants = {
           blue: [],
           red: []
-        }
-        participantsArray.forEach((player) => {
+        };
+        console.log(i)
+        participantsArray.forEach((player,index) => {
           let userName = player.summonerName;
           let playerStats = {};
           playerStats.name = userName;
