@@ -27,7 +27,6 @@ const apiController = {
       }
     }
     const apiLink = `https://${continent}${process.env.MATCHCODEURL}${res.locals.userInfo.puuid}/ids?start=0&count=20&api_key=${process.env.APIKEY}`
-
     try {
       const response = await fetch(apiLink);
       const matchCodes = await response.json();
@@ -40,11 +39,11 @@ const apiController = {
   },
   getMatchInfo: async (req,res,next) => {
     const apiLinkArray = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < res.locals.matchCodes.length; i++) {
       const apiLink = `https://${res.locals.continent}${process.env.MATCHINFOURL}${res.locals.matchCodes[i]}?api_key=${process.env.APIKEY}`;
       apiLinkArray.push(apiLink);
     }
-    // console.log("matchHistory Link Array:", apiLinkArray)
+    console.log("matchHistory Link Array:", apiLinkArray)
     try {
       const matchHistoryInfo = [];
       for (let i = 0; i < apiLinkArray.length; i++) {
@@ -100,6 +99,7 @@ const apiController = {
       res.locals.matchHistoryInfo = matchHistoryInfo;
       return next();
     } catch (err) {
+      console.log("there is an error", err)
       return next('failed to get match info:', err.message)
     }
   }
