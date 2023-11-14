@@ -16,7 +16,6 @@ interface statsRanking {
 function PentagonalGraph (props) {
   const chartRef = useRef();
   const data = props.matchStats;
-  console.log(data)
   const { summonerName } = useSelector((state) => state.currentPlayer)
 
   useEffect(() => {
@@ -59,7 +58,7 @@ function PentagonalGraph (props) {
     let chartInstance;
     //format data for chart js
     const chartData = {
-      labels:['totalDamageDealt','deaths', 'killParticipation','totalMinionsKilled','visionScore'],
+      labels:['totalDamageDealt','survivability', 'killParticipation','totalMinionsKilled','visionScore'],
       datasets:[{
         label: summonerName,
         data: Object.values(playerRank),
