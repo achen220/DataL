@@ -8,6 +8,7 @@ const regionToContinent = {
 const apiController = {
   getSummonerInfo: async (req,res,next) => {
     const apiLink = `https://${req.body.region}1${process.env.IDURL}${req.body.summonerName}?api_key=${process.env.APIKEY}`
+    console.log(req.body)
     try {
       const response = await fetch(apiLink)
       const userInfo = await response.json()
@@ -26,7 +27,7 @@ const apiController = {
         break;
       }
     }
-    const apiLink = `https://${continent}${process.env.MATCHCODEURL}${res.locals.userInfo.puuid}/ids?start=0&count=20&api_key=${process.env.APIKEY}`
+    const apiLink = `https://${continent}${process.env.MATCHCODEURL}${res.locals.userInfo.puuid}/ids?start=0&count=35&api_key=${process.env.APIKEY}`
     try {
       const response = await fetch(apiLink);
       const matchCodes = await response.json();
@@ -43,27 +44,30 @@ const apiController = {
       const apiLink = `https://${res.locals.continent}${process.env.MATCHINFOURL}${res.locals.matchCodes[i]}?api_key=${process.env.APIKEY}`;
       apiLinkArray.push(apiLink);
     }
-    console.log("matchHistory Link Array:", apiLinkArray)
+    // console.log("matchHistory Link Array:", apiLinkArray)
     try {
       const matchHistoryInfo = [];
       for (let i = 0; i < apiLinkArray.length; i++) {
         const response = await fetch(apiLinkArray[i]);
         const matchInfo = await response.json();
         const filteredMatchInfo = {};
-        if (matchInfo.info.gameMode !== 'CLASSIC') continue;
+        if (matchInfo.info.gameMode !== 'CLASSIC') {
+          continue;
+        }
         const participantsArray= matchInfo.info.participants;
         filteredMatchInfo.queueId = matchInfo.info.queueId;
         filteredMatchInfo.participants = {
           blue: [],
           red: []
         };
-        console.log(i)
         participantsArray.forEach((player,index) => {
           let userName = player.summonerName;
           let playerStats = {};
           playerStats.name = userName;
-          playerStats.totalDamageDealt = player.totalDamageDealt;
-          playerStats.death = player.death;
+          playerStats.position = player.individualPosition;
+          playerStats.Champion = player.championName;
+          playerStats.totalDamageDealt = player.totalDamageDealtToChampions;
+          playerStats.deaths = player.deaths;
           playerStats.killParticipation = player.challenges.killParticipation;
           playerStats.totalMinionsKilled = player.totalMinionsKilled;
           playerStats.visionScore = player.visionScore;
