@@ -8,11 +8,11 @@ const regionToContinent = {
 const apiController = {
   getSummonerInfo: async (req,res,next) => {
     const apiLink = `https://${req.body.region}1${process.env.IDURL}${req.body.summonerName}?api_key=${process.env.APIKEY}`
-    console.log(req.body)
     try {
       const response = await fetch(apiLink)
       const userInfo = await response.json()
       res.locals.userInfo = userInfo;
+
       return next();
     } catch (err) {
       return next('cannot find user:', err.message)
@@ -62,6 +62,11 @@ const apiController = {
         };
         participantsArray.forEach((player,index) => {
           let userName = player.summonerName;
+          //bringing current player champion and position to upper level of sent object
+          if (userName === res.locals.userInfo.name){
+            filteredMatchInfo.playerChampion = player.championName;
+            filteredMatchInfo.playerPosition = player.individualPosition;
+          }
           let playerStats = {};
           playerStats.name = userName;
           playerStats.position = player.individualPosition;
@@ -79,7 +84,7 @@ const apiController = {
             filteredMatchInfo.participants.red.push(playerStats)
           }
         })
-
+        
         filteredMatchInfo.gameDuration = matchInfo.info.gameDuration;
         
         filteredMatchInfo.gameEndTime = matchInfo.info.gameEndTimestamp;
