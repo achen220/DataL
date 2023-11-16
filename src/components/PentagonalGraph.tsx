@@ -14,6 +14,7 @@ function PentagonalGraph (props) {
   const [position, setPosition] = useState<string>('overall');
   const [champions, setChampions] = useState<string[]>([]);
   const { summonerName } = useSelector((state) => state.currentPlayer);
+  const allRoles: string[] = ['TOP','JUNGLE','MIDDLE','BOTTOM','UTILITY'];
   const getChampions = PentagonalGraphAPI.specifyChampionBasedOnPosition;
   const getAvgRank = PentagonalGraphAPI.calculateAverageRank;
 
@@ -65,7 +66,14 @@ function PentagonalGraph (props) {
   return (
     <>
       <ul className="flex gap-x-10">
-        <li className="inline">
+        {
+          allRoles.map((role) => (
+            <li className="inline">
+              <button onClick={() => {setPosition(role);getChampions(data,position)}} className="btn btn-active btn-neutral">{role}</button>
+            </li>            
+          ))
+        }
+        {/* <li className="inline">
           <button onClick={() => {setPosition("TOP");getChampions(data,position)}} className="btn btn-active btn-neutral">Top</button>
         </li>
         <li className="inline">
@@ -82,7 +90,7 @@ function PentagonalGraph (props) {
         </li>
         <li className="inline">
           <button onClick={() => {setPosition("overall")}} className="btn btn-active btn-neutral">Overall</button>
-        </li>
+        </li> */}
       </ul>
       <ul>
         {
