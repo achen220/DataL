@@ -12,13 +12,14 @@ function PentagonalGraph (props) {
   const chartRef = useRef();
   const data = props.matchStats;
   const [position, setPosition] = useState<string>('overall');
+  const [champions, setChampions] = useState<string[]>([]);
   const { summonerName } = useSelector((state) => state.currentPlayer);
-  const championPool = {};
-  // const displayChampion: any[]= [];
-  const [displayChampion, setDisplayChampion] = useState<any[]>([])
+  const getChampions = PentagonalGraphAPI.specifyChampionBasedOnPosition;
+  const getAvgRank = PentagonalGraphAPI.calculateAverageRank;
+
   useEffect(() => {
-    const playerRank = PentagonalGraphAPI.calculateAverageRank(data, summonerName, position)
-    // console.log(playerRank)
+    const playerRank = getAvgRank(data, summonerName, position);
+    setChampions(getChampions(data,position))
     let chartInstance;
     //format data for chart js
     const chartData = {
@@ -35,6 +36,7 @@ function PentagonalGraph (props) {
         pointHoverBorderColor: 'rgb(255, 99, 132)'
       }]
     }
+    //creation of chart data
     if (chartRef && chartRef.current) {
       const ctx = chartRef.current.getContext('2d');
       chartInstance = new Chart(ctx, {
@@ -64,25 +66,32 @@ function PentagonalGraph (props) {
     <>
       <ul className="flex gap-x-10">
         <li className="inline">
-          <button onClick={() => {setPosition("TOP")}} className="btn btn-active btn-neutral">Top</button>
+          <button onClick={() => {setPosition("TOP");getChampions(data,position)}} className="btn btn-active btn-neutral">Top</button>
         </li>
         <li className="inline">
-          <button onClick={() => {setPosition("JUNGLE")}} className="btn btn-active btn-neutral">Jungle</button>
+          <button onClick={() => {setPosition("JUNGLE"); getChampions(data,position)}} className="btn btn-active btn-neutral">Jungle</button>
         </li>
         <li className="inline">
-          <button onClick={() => {setPosition("MIDDLE")}} className="btn btn-active btn-neutral">Mid</button>
+          <button onClick={() => {setPosition("MIDDLE"); getChampions(data,position)}} className="btn btn-active btn-neutral">Mid</button>
         </li>
         <li className="inline">
-          <button onClick={() => {setPosition("BOTTOM")}} className="btn btn-active btn-neutral">ADC</button>
+          <button onClick={() => {setPosition("BOTTOM"); getChampions(data,position)}} className="btn btn-active btn-neutral">ADC</button>
         </li>
         <li className="inline">
-          <button onClick={() => {setPosition("UTILITY")}} className="btn btn-active btn-neutral">Support</button>
+          <button onClick={() => {setPosition("UTILITY"); getChampions(data,position)}} className="btn btn-active btn-neutral">Support</button>
         </li>
         <li className="inline">
           <button onClick={() => {setPosition("overall")}} className="btn btn-active btn-neutral">Overall</button>
         </li>
       </ul>
       <ul>
+        {
+          champions.map((champ) => (
+            <li key={champ} className="inline">
+              <button className="btn btn-active btn-neutral">{champ}</button>
+            </li>
+          ))
+        }
       </ul>
       <canvas className="w-full h-full" ref={chartRef}>
       </canvas>

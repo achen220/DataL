@@ -51,6 +51,21 @@ const PentagonalGraphAPI = {
           // else playerRank[stat] = (total/championPool[champion])
         }
         return playerRank
+  },
+  specifyChampionBasedOnPosition: (data,position) => {
+    //iterate through data and create array of all champion used in that position
+    const cache = data.reduce((acc,currMatch) => {
+      if (position !== 'overall' && currMatch.playerPosition.toUpperCase() !== position.toUpperCase()) return acc;
+      else {
+        if (!acc[currMatch.playerChampion]) acc[currMatch.playerChampion] = 1;
+        else acc[currMatch.playerChampion]++;
+        return acc;
+      }
+    },{});
+    return Object.keys(cache);
+  },
+  showRankBasedOnChampion: () => {
+
   }
 }
 
