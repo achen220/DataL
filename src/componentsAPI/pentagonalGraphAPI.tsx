@@ -7,7 +7,7 @@ interface statsRanking {
 }
 
 const PentagonalGraphAPI = {
-  calculateAverageRank: (data, summonerName: string, position:string) => {
+  calculateAverageRank: (data, summonerName: string, position:string | null, champion:string | null) => {
         const playerRank: statsRanking = {
           totalDamageDealt: [],
           deaths: [],
@@ -19,10 +19,18 @@ const PentagonalGraphAPI = {
         //rank player stats in all five category out of 10
         for (let i = 0; i < data.length; i++) {
           const currentMatch = data[i];
-          //filtering based on position
-          if (position !== 'overall' && currentMatch.playerPosition.toUpperCase() !== position.toUpperCase()) {
-            continue;
+          if (position !== null) {
+            //filtering based on position
+            if (position !== 'overall' && currentMatch.playerPosition.toUpperCase() !== position.toUpperCase()) {
+              continue;
+            }
+          } 
+          else if (champion !== null) {
+            if (currentMatch.playerChampion.toUpperCase() !== champion.toUpperCase()) {
+              continue;
+            }
           }
+
           sampleSize++;  
           const combinedTeam = currentMatch.participants.blue.concat(currentMatch.participants.red);
     
@@ -50,7 +58,7 @@ const PentagonalGraphAPI = {
           // if (champion === null) playerRank[stat] = (total/sampleSize);
           // else playerRank[stat] = (total/championPool[champion])
         }
-        return playerRank
+        return playerRank;
   },
   specifyChampionBasedOnPosition: (data,position) => {
     //iterate through data and create array of all champion used in that position
@@ -64,9 +72,7 @@ const PentagonalGraphAPI = {
     },{});
     return Object.keys(cache);
   },
-  showRankBasedOnChampion: () => {
 
-  }
 }
 
 export default PentagonalGraphAPI;
